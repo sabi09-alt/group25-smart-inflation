@@ -18,17 +18,6 @@ st.set_page_config(page_title="Smart Inflation Forecasting System", layout="cent
 st.title("📊 Smart Inflation Prediction System")
 st.markdown("Welcome to our **Smart Inflation Analysis App**. Enter your data below to see predictions!")
 
-col1, col2 = st.columns(2)
-
-with col1:
-    inflation = st.number_input("Enter inflation rate (%)", min_value=0.0, max_value=100.0, value=5.0)
-    gdp = st.number_input("Enter GDP growth (%)", min_value=-50.0, max_value=50.0, value=3.0)
-
-with col2:
-    st.write("Your inputs:")
-    st.write(f"Inflation: {inflation}%")
-    st.write(f"GDP Growth: {gdp}%")
-
 
 st.write("---")
 

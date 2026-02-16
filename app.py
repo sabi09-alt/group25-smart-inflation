@@ -41,7 +41,7 @@ if st.button("Predict Inflation Rate"):
     else:
         st.error("Inflation is HIGH. Economic pressure may increase.")
 
-    
+
 
 
 

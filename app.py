@@ -4,10 +4,37 @@ import numpy as np
 
 model = joblib.load("model.pkl")
 
+st.sidebar.header("About this App")
+st.sidebar.info(
+    """
+    This app predicts inflation impact based on user inputs.
+    
+    Developed by **Group 25**.
+    """
+)
+
+
+if st.button("Predict"):
+    input_data = pd.DataFrame({'inflation':[inflation], 'gdp':[gdp]})
+    prediction = model.predict(input_data)
+    st.success(f"Predicted Value: {prediction[0]:.2f}")
+
 st.set_page_config(page_title="Smart Inflation Forecasting System", layout="centered")
 
-st.title("📈 Smart Inflation Forecasting System")
-st.markdown("Predict Tanzania's Inflation Rate using Machine Learning")
+st.title("📊 Smart Inflation Prediction System")
+st.markdown("Welcome to our **Smart Inflation Analysis App**. Enter your data below to see predictions!")
+
+col1, col2 = st.columns(2)
+
+with col1:
+    inflation = st.number_input("Enter inflation rate (%)", min_value=0.0, max_value=100.0, value=5.0)
+    gdp = st.number_input("Enter GDP growth (%)", min_value=-50.0, max_value=50.0, value=3.0)
+
+with col2:
+    st.write("Your inputs:")
+    st.write(f"Inflation: {inflation}%")
+    st.write(f"GDP Growth: {gdp}%")
+
 
 st.write("---")
 

@@ -13,12 +13,6 @@ st.sidebar.info(
     """
 )
 
-
-if st.button("Predict"):
-    input_data = pd.DataFrame({'inflation':[inflation], 'gdp':[gdp]})
-    prediction = model.predict(input_data)
-    st.success(f"Predicted Value: {prediction[0]:.2f}")
-
 st.set_page_config(page_title="Smart Inflation Forecasting System", layout="centered")
 
 st.title("📊 Smart Inflation Prediction System")

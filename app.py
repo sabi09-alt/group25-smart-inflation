@@ -54,14 +54,26 @@ st.markdown("### Developed by Group 25")
 
 st.write("Enter the economic indicators below:")
 
-inflation = st.number_input("Inflation Rate (%)", 0.0, 100.0, 5.0)
-gdp = st.number_input("GDP Growth (%)", -50.0, 50.0, 3.0)
+st.write("---")
+
+
+gdp_growth = st.number_input("GDP Growth Rate (%)", min_value=-10.0, max_value=20.0, value=5.0)
+interest_rate = st.number_input("Interest Rate (%)", min_value=0.0, max_value=30.0, value=10.0)
+exchange_rate = st.number_input("Exchange Rate (TZS per USD)", min_value=1000.0, max_value=5000.0, value=2500.0)
+unemployment = st.number_input("Unemployment Rate (%)", min_value=0.0, max_value=50.0, value=10.0)
+money_supply = st.number_input("Money Supply (M2)", min_value=0.0, value=1000.0)
+
+
+st.write("---")
+
+if st.button("Predict Inflation Rate"):
+
 
 if st.button("🚀 Predict Now"):
-    input_data = pd.DataFrame({
-        "inflation": [inflation],
-        "gdp": [gdp]
-    })
+    # Prepare input data
+    input_data = np.array([[gdp_growth, interest_rate, exchange_rate, unemployment,money_supply]])
+
+
 
     prediction = model.predict(input_data)
 

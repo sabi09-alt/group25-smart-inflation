@@ -1,61 +1,104 @@
 import streamlit as st
 import joblib
+import pandas as pd
 import numpy as np
+import os
 
-model = joblib.load("model.pkl")
-
-st.sidebar.header("About this App")
-st.sidebar.info(
-    """
-    This app predicts inflation impact based on user inputs.
-    
-    Developed by **Group 25**.
-    """
+# ---------------------------------------------------
+# Page Configuration
+# ---------------------------------------------------
+st.set_page_config(
+    page_title="Group 25 – Smart Inflation",
+    page_icon="📈",
+    layout="wide"
 )
 
-st.set_page_config(page_title="Smart Inflation Forecasting System", layout="centered")
+# ---------------------------------------------------
+# Load Model Safely
+# ---------------------------------------------------
+BASE_DIR = os.path.dirname(__file__)
+model_path = os.path.join(BASE_DIR, "model.pkl")
+model = joblib.load(model_path)
 
+# ---------------------------------------------------
+# Header Section
+# ---------------------------------------------------
 st.title("📊 Smart Inflation Prediction System")
-st.markdown("Welcome to our **Smart Inflation Analysis App**. Enter your data below to see predictions!")
+st.markdown("""
+Welcome to our **Smart Inflation Analysis App**.  
+Enter the economic indicators below and click **Predict** to see the result.
+""")
 
+st.divider()
 
-st.write("---")
+# ---------------------------------------------------
+# Sidebar Information
+# ---------------------------------------------------
+st.sidebar.header("📘 About This App")
+st.sidebar.info("""
+This application predicts economic outcomes based on selected indicators.
 
-st.subheader("Enter Economic Indicators")
+Developed by **Group 25**  
+Powered by Machine Learning 🚀
+""")
 
-gdp_growth = st.number_input("GDP Growth Rate (%)", min_value=-10.0, max_value=20.0, value=5.0)
-interest_rate = st.number_input("Interest Rate (%)", min_value=0.0, max_value=30.0, value=10.0)
-exchange_rate = st.number_input("Exchange Rate (TZS per USD)", min_value=1000.0, max_value=5000.0, value=2500.0)
-unemployment = st.number_input("Unemployment Rate (%)", min_value=0.0, max_value=50.0, value=10.0)
-money_supply = st.number_input("Money Supply (M2)", min_value=0.0, value=1000.0)
+# ---------------------------------------------------
+# Main Layout (Columns)
+# ---------------------------------------------------
+col1, col2 = st.columns(2)
 
+with col1:
+    st.subheader("📥 Input Economic Data")
 
-st.write("---")
+    inflation = st.number_input(
+        "Inflation Rate (%)",
+        min_value=0.0,
+        max_value=100.0,
+        value=5.0
+    )
 
-if st.button("Predict Inflation Rate"):
+    gdp = st.number_input(
+        "GDP Growth (%)",
+        min_value=-50.0,
+        max_value=50.0,
+        value=3.0
+    )
 
-    # Prepare input data
-    input_data = np.array([[gdp_growth, interest_rate, exchange_rate, unemployment,money_supply]])
+with col2:
+    st.subheader("📌 Current Inputs")
+    st.write(f"Inflation Rate: **{inflation}%**")
+    st.write(f"GDP Growth: **{gdp}%**")
 
-     # Make prediction
-    prediction = model.predict(input_data)
+st.divider()
 
-    # Display result
-    st.success(f"Predicted Inflation Rate: {prediction[0]:.2f}%")
+# ---------------------------------------------------
+# Prediction Section
+# ---------------------------------------------------
+if st.button("🚀 Predict"):
+    try:
+        # Create dataframe with correct feature names
+        input_data = pd.DataFrame({
+            "inflation": [inflation],
+            "gdp": [gdp]
+        })
 
-    # Interpretation
-    if prediction[0] < 5:
-        st.info("Inflation is considered LOW and stable.")
-    elif prediction[0] < 10:
-        st.warning("Inflation is MODERATE.")
-    else:
-        st.error("Inflation is HIGH. Economic pressure may increase.")
+        prediction = model.predict(input_data)
 
+        st.success(f"📈 Predicted Value: {prediction[0]:.2f}")
 
+        # Optional visualization
+        st.subheader("📊 Prediction Visualization")
+        chart_data = pd.DataFrame({
+            "Value": [prediction[0]]
+        })
+        st.bar_chart(chart_data)
 
+    except Exception as e:
+        st.error("Something went wrong while making prediction.")
+        st.write(e)
 
-
-
-
-
-
+# ---------------------------------------------------
+# Footer
+# ---------------------------------------------------
+st.markdown("---")
+st.caption("© 2026 Group 25 | Smart Inflation Project")

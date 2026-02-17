@@ -18,7 +18,7 @@ st.set_page_config(
 page_style = """
 <style>
 [data-testid="stAppViewContainer"] {
-    background-image: url("https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3");
+    background-image: url("https://images.unsplash.com/photo-1507679799987-c73779587ccf");
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -81,35 +81,35 @@ st.divider()
 st.subheader("📥 Enter Economic Indicators")
 
 gdp_growth = st.number_input(
-    "GDP Growth Rate (%)",
+    "📈 GDP Growth Rate (%)",
     min_value=-10.0,
     max_value=20.0,
     value=5.0
 )
 
 interest_rate = st.number_input(
-    "Interest Rate (%)",
+    "🏦 Interest Rate (%)",
     min_value=0.0,
     max_value=30.0,
     value=10.0
 )
 
 exchange_rate = st.number_input(
-    "Exchange Rate (TZS per USD)",
+    "💱 Exchange Rate (TZS per USD)",
     min_value=1000.0,
     max_value=5000.0,
     value=2500.0
 )
 
 unemployment = st.number_input(
-    "Unemployment Rate (%)",
+    "👥 Unemployment Rate (%)",
     min_value=0.0,
     max_value=50.0,
     value=10.0
 )
 
 money_supply = st.number_input(
-    "Money Supply (M2)",
+    "💰 Money Supply (M2)",
     min_value=0.0,
     value=1000.0
 )

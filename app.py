@@ -1,24 +1,24 @@
 import streamlit as st
 import joblib
-import pandas as pd
+import numpy as np
 import os
 
 # ---------------------------------------------------
-# Page Config
+# PAGE CONFIG (must be first Streamlit command)
 # ---------------------------------------------------
 st.set_page_config(
-    page_title="Smart Inflation system",
-    page_icon="📈",
+    page_title="Smart Inflation Forecasting System",
+    page_icon="📊",
     layout="centered"
 )
 
 # ---------------------------------------------------
-# Background Image CSS
+# BACKGROUND IMAGE + PROFESSIONAL STYLE
 # ---------------------------------------------------
-page_bg = """
+page_style = """
 <style>
 [data-testid="stAppViewContainer"] {
-    background-image: url("https://images.unsplash.com/photo-1559526324-4b87b5e36e44");
+    background-image: url("https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3");
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -30,54 +30,118 @@ page_bg = """
 }
 
 .main {
-    background: rgba(255, 255, 255, 0.85);
+    background: rgba(255, 255, 255, 0.90);
     padding: 2rem;
     border-radius: 15px;
 }
+
+.stButton>button {
+    width: 100%;
+    border-radius: 10px;
+    height: 3em;
+    font-weight: bold;
+}
 </style>
 """
-
-st.markdown(page_bg, unsafe_allow_html=True)
+st.markdown(page_style, unsafe_allow_html=True)
 
 # ---------------------------------------------------
-# Load Model
+# LOAD MODEL SAFELY
 # ---------------------------------------------------
 BASE_DIR = os.path.dirname(__file__)
 model_path = os.path.join(BASE_DIR, "model.pkl")
 model = joblib.load(model_path)
 
 # ---------------------------------------------------
-# App Content
+# SIDEBAR
 # ---------------------------------------------------
-st.title("📊 Smart Inflation Predictor")
-st.markdown("### Developed by Group 25")
+st.sidebar.header("📘 About this App")
+st.sidebar.info(
+    """
+    This app predicts inflation impact based on user inputs.
 
-st.write("Enter the economic indicators below:")
+    Developed by **Group 25**
+    """
+)
 
-st.write("---")
+# ---------------------------------------------------
+# TITLE SECTION
+# ---------------------------------------------------
+st.title("📊 Smart Inflation Prediction System")
+st.markdown(
+    "Welcome to our **Smart Inflation Analysis App**. "
+    "Enter economic indicators below to forecast inflation."
+)
 
+st.divider()
 
-gdp_growth = st.number_input("GDP Growth Rate (%)", min_value=-10.0, max_value=20.0, value=5.0)
-interest_rate = st.number_input("Interest Rate (%)", min_value=0.0, max_value=30.0, value=10.0)
-exchange_rate = st.number_input("Exchange Rate (TZS per USD)", min_value=1000.0, max_value=5000.0, value=2500.0)
-unemployment = st.number_input("Unemployment Rate (%)", min_value=0.0, max_value=50.0, value=10.0)
-money_supply = st.number_input("Money Supply (M2)", min_value=0.0, value=1000.0)
+# ---------------------------------------------------
+# INPUT SECTION (YOUR DATA – NOT REDUCED)
+# ---------------------------------------------------
+st.subheader("📥 Enter Economic Indicators")
 
+gdp_growth = st.number_input(
+    "GDP Growth Rate (%)",
+    min_value=-10.0,
+    max_value=20.0,
+    value=5.0
+)
 
-st.write("---")
+interest_rate = st.number_input(
+    "Interest Rate (%)",
+    min_value=0.0,
+    max_value=30.0,
+    value=10.0
+)
 
-if st.button("Predict Inflation Rate"):
+exchange_rate = st.number_input(
+    "Exchange Rate (TZS per USD)",
+    min_value=1000.0,
+    max_value=5000.0,
+    value=2500.0
+)
 
+unemployment = st.number_input(
+    "Unemployment Rate (%)",
+    min_value=0.0,
+    max_value=50.0,
+    value=10.0
+)
 
-if st.button("🚀 Predict Now"):
-    # Prepare input data
-    input_data = np.array([[gdp_growth, interest_rate, exchange_rate, unemployment,money_supply]])
+money_supply = st.number_input(
+    "Money Supply (M2)",
+    min_value=0.0,
+    value=1000.0
+)
 
+st.divider()
 
+# ---------------------------------------------------
+# PREDICTION SECTION
+# ---------------------------------------------------
+if st.button("🚀 Predict Inflation Rate"):
+
+    input_data = np.array([[
+        gdp_growth,
+        interest_rate,
+        exchange_rate,
+        unemployment,
+        money_supply
+    ]])
 
     prediction = model.predict(input_data)
 
-    st.success(f"Predicted Value: {prediction[0]:.2f}")
+    st.success(f"📈 Predicted Inflation Rate: {prediction[0]:.2f}%")
 
+    if prediction[0] < 5:
+        st.info("Inflation is considered LOW and stable.")
+    elif prediction[0] < 10:
+        st.warning("Inflation is MODERATE.")
+    else:
+        st.error("Inflation is HIGH. Economic pressure may increase.")
+
+# ---------------------------------------------------
+# FOOTER
+# ---------------------------------------------------
 st.markdown("---")
-st.caption("© 2026 Group 25 | Smart Inflation Project")
+st.caption("© 2026 Group 25 | Smart Inflation Forecasting System")
